@@ -1,16 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# Modules used
 import os
 import re
 
-fasta_list = os.listdir("/path/to/uces/")
+# UCEs fasta files list in a specific directory. One file = one UCE
+fasta_list = os.listdir("/path/to/uces/") 
 
+# Fasta dictionary [(dic), key = gene_ID and value = sequence] to be filled with all fasta files found in the folder above
 dic_fastas = {}
 
+# Loop to fill fasta dic
 for fasta_file in fasta_list:
-	arquivo = open("/path/to/uces/" + str(fasta_file), "r")
-	for line in arquivo:
+	seq_file = open("/path/to/uces/" + str(fasta_file), "r")
+	for line in seq_file:
 		line = line.rstrip("\r\n")
 		if line.startswith(">"):
 			seq_name = line[1:] 
@@ -18,8 +22,10 @@ for fasta_file in fasta_list:
 		else:
 			dic_fastas[seq_name] = dic_fastas[seq_name] + str(line)
 
+# UCE dic with the number of species/individuals per UCE
 dic_uces = {}
 
+# Loop to fill UCE dic
 for key, value in dic_fastas.iteritems():
 	match = re.search(".*_(uce-[0-9]+)", key)
 	if match.group(1) in dic_uces:
@@ -27,6 +33,7 @@ for key, value in dic_fastas.iteritems():
 	else:
 		dic_uces[match.group(1)] = 1
 
+# Check how many UCEs have all species
 count_uces = 0
 for chave, valor in dic_uces.iteritems():
 	if valor == 23:
@@ -34,7 +41,7 @@ for chave, valor in dic_uces.iteritems():
 
 print count_uces
 
-
+# Loop fasta dic to create a single UCE fasta per species. Only sequences with one or zero 'n/N' are allowed.
 for key, value in dic_fastas.iteritems():
 	match = re.search(".*_(uce-[0-9]+)", key)
 	if "G1_" in key:
@@ -291,5 +298,3 @@ for key, value in dic_fastas.iteritems():
 			new_file.write(">" + "G23_Macronectes_giganteus" + "\n")
 			new_file.write(str(value) + "\n")
 	new_file.close()
-#"""
-	
