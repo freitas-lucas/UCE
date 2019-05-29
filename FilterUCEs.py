@@ -5,7 +5,7 @@
 import os
 import re
 
-# UCEs fasta files list in a specific directory. One file = one UCE
+# Species UCEs fasta files list in a specific directory. One fasta file in this folder = UCEs for one species.
 fasta_list = os.listdir("/path/to/uces/") 
 
 # Fasta dictionary [(dic), key = gene_ID and value = sequence] to be filled with all fasta files found in the folder above
@@ -22,10 +22,10 @@ for fasta_file in fasta_list:
 		else:
 			dic_fastas[seq_name] = dic_fastas[seq_name] + str(line)
 
-# UCE dic with the number of species/individuals per UCE
+# UCE_species_number dic with the number of species/individuals per UCE
 dic_uces = {}
 
-# Loop to fill UCE dic
+# Loop to fill UCE_species_number dic
 for key, value in dic_fastas.iteritems():
 	match = re.search(".*_(uce-[0-9]+)", key)
 	if match.group(1) in dic_uces:
@@ -41,7 +41,8 @@ for chave, valor in dic_uces.iteritems():
 
 print count_uces
 
-# Loop fasta dic to create a single UCE fasta per species. Only sequences with one or zero 'n/N' are allowed.
+# Loop fasta dic to create single loci UCEs fasta files. Each UCE file written represents one UCE locus.
+# Only sequences with one or zero 'n/N' are allowed.
 for key, value in dic_fastas.iteritems():
 	match = re.search(".*_(uce-[0-9]+)", key)
 	if "G1_" in key:
