@@ -1,2 +1,2 @@
 # UCEs scripts
-Python scripts to run UCEs analysis.
+Python scripts to run some UCEs analysis.
